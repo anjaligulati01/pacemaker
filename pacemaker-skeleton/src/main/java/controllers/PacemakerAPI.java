@@ -127,6 +127,15 @@ public class PacemakerAPI {
     }
   }
   
+  public List<Location> getActivityLocations(String id, String activityId){
+    Optional<User> user = Optional.fromNullable(userIndex.get(id));
+    List<Location> locations = new ArrayList<Location>();
+    if (user.isPresent()) {
+      locations = activitiesIndex.get(activityId).route;
+    }
+    return locations;
+  }
+  
   public void follow(String id, String email) {
     Optional<User> user = Optional.fromNullable(userIndex.get(id));
     if(user.isPresent()) {

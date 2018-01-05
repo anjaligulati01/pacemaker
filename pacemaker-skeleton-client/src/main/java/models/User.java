@@ -2,10 +2,8 @@ package models;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 import com.google.common.base.Objects;
 
@@ -17,8 +15,8 @@ public class User implements Serializable {
   public String email;
   public String password;
   public List<String> friends;
-  public Map<String, List<String>> messagesFromFriends = new HashMap<>();
   public boolean disabled;
+  
 
   public User() {
   }
@@ -49,8 +47,8 @@ public class User implements Serializable {
     this.lastname = lastName;
     this.email = email;
     this.password = password;
-    this.disabled = false;
-  }
+    disabled = false;
+   }
 
   @Override
   public boolean equals(final Object obj) {
@@ -72,7 +70,6 @@ public class User implements Serializable {
         .addValue(lastname)
         .addValue(password)
         .addValue(email)
-        .addValue(friends)
         .toString();
   }
 

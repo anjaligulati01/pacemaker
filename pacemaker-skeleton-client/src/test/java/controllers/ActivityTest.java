@@ -3,7 +3,9 @@ package controllers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
@@ -68,7 +70,8 @@ public class ActivityTest {
     Activity returnedActivity = pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance);
     pacemaker.addLocation(homer.id, returnedActivity.id, location.latitude, location.longitude);
 
-    List<Location> locations = pacemaker.getLocations(homer.id, returnedActivity.id);
+    List<Location> locations = pacemaker.getLocations(returnedActivity.id);
+    //System.out.println("Loc size" + locations.size());
     assertEquals (locations.size(), 1);
     assertEquals (locations.get(0), location);
   }
@@ -80,9 +83,93 @@ public class ActivityTest {
     Activity returnedActivity = pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance);
 
     Fixtures.locations.forEach (location ->  pacemaker.addLocation(homer.id, returnedActivity.id, location.latitude, location.longitude));
-    List<Location> returnedLocations = pacemaker.getLocations(homer.id, returnedActivity.id);
+    List<Location> returnedLocations = pacemaker.getActivityLocations(returnedActivity.id);
     assertEquals (Fixtures.locations.size(), returnedLocations.size());
     assertEquals(Fixtures.locations, returnedLocations);
+  }
+  
+  @Test
+  public void testDeleteActivities() {
+    //Activity activity = new Activity("walk", "shop", 2.5);
+    Fixtures.activities.forEach(activity -> 
+      pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance));
+    int countActivities = pacemaker.getActivities(homer.id).size();
+    assertTrue(countActivities > 0);
+    pacemaker.deleteActivities(homer.id);
+    countActivities = pacemaker.getActivities(homer.id).size();
+    assertEquals(countActivities, 0);
+  }
+  
+  @Test
+  public void testListActivities() {
+    Fixtures.activities.forEach(activity -> 
+    pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance));
+    int countActivities = pacemaker.listActivities(homer.id).size();
+    assertTrue(countActivities > 0);
+  }
+  
+  @Test
+  public void testListActivitiesOfFriend() {
+    Fixtures.activities.forEach(activity -> 
+      pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance));
+    User marge = pacemaker.createUser("Marge", "Simpson", "marge@simpson.com", "password");
+    pacemaker.follow(marge.id, homer.email);
+    int countActivities = pacemaker.listActivitiesOfFriend(marge.id, homer.email).size();
+    assertTrue(countActivities > 0);
+  }
+  
+  @Test
+  public void testGetDistanceLeaderBoard() {
+    Fixtures.users.forEach(
+        user -> pacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
+    pacemaker.getUsers().forEach(user ->
+      Fixtures.activities.forEach(activity -> 
+        pacemaker.createActivity(user.id, activity.type, activity.location, activity.distance))
+    );
+    
+    List<User> returnedUsers = (List<User>)pacemaker.getUsers();
+    returnedUsers.forEach(user ->
+      pacemaker.follow(homer.id, user.email)
+     );
+    List<Activity> distanceLeaderBoard = (List<Activity>)pacemaker.getDistanceLeaderBoard(homer.id);
+    assertTrue(distanceLeaderBoard.get(0).distance >= distanceLeaderBoard.get(5).distance);
+  }
+  
+  @Test
+  public void testGetDistanceLeaderBoardByType() {
+    Fixtures.users.forEach(
+        user -> pacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
+    pacemaker.getUsers().forEach(user ->
+      Fixtures.activities.forEach(activity -> 
+        pacemaker.createActivity(user.id, activity.type, activity.location, activity.distance)) 
+    );
+    
+    List<User> returnedUsers = (List<User>)pacemaker.getUsers();
+    returnedUsers.forEach(user ->
+      pacemaker.follow(homer.id, user.email)
+     );
+    List<Activity> distanceLeaderBoard = (List<Activity>)pacemaker.getDistanceLeaderBoardByType(homer.id, "walk");
+    assertEquals(distanceLeaderBoard.get(0).type, "walk");
+  }
+  
+  @Test
+  public void testLocationLeaderBoard() {
+    User margeUser = pacemaker.createUser(Fixtures.users.get(0).getFirstname(), Fixtures.users.get(0).getLastname(),
+        Fixtures.users.get(0).email, Fixtures.users.get(0).password);
+    User lisaUser = pacemaker.createUser(Fixtures.users.get(1).getFirstname(), Fixtures.users.get(1).getLastname(),
+        Fixtures.users.get(1).email, Fixtures.users.get(1).password);
+    Fixtures.margeActivities.forEach(activity ->
+      pacemaker.createActivity(margeUser.id, activity.type, activity.location,
+          activity.distance));
+    Fixtures.lisasActivities.forEach(activity ->
+    pacemaker.createActivity(lisaUser.id, activity.type, activity.location,
+        activity.distance));
+    pacemaker.follow(homer.id, margeUser.email);
+    pacemaker.follow(homer.id, lisaUser.email);
+    
+    List<Activity> locationLeaderBoard = (List<Activity>)pacemaker.getLocationLeaderBoard(homer.id, Fixtures.activities.get(1).location);
+    assertEquals(locationLeaderBoard.get(0).location, Fixtures.activities.get(1).location);
+    
   }
   
 }

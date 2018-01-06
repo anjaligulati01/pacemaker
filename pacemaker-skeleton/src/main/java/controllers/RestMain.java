@@ -5,11 +5,11 @@ import io.javalin.Javalin;
 public class RestMain {
 
   public static void main(String[] args) throws Exception {
-    Javalin app = Javalin.start(7000);
-    //Javalin app = Javalin.create();
+    //Javalin app = Javalin.start(7000);
+    Javalin app = Javalin.create();
     
-    //app.port(getAssignedPort());
-    //app.start();
+    app.port(getAssignedPort());
+    app.start();
     PacemakerRestService service = new PacemakerRestService();
     configRoutes(app, service);
   }

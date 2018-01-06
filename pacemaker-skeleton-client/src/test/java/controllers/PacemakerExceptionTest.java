@@ -2,6 +2,7 @@ package controllers;
 
 import static models.Fixtures.users;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +40,7 @@ public class PacemakerExceptionTest
     pacemaker.deleteUsers();
     users.forEach(
         user -> realPacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
-    Collection<User> returnedUsers = pacemaker.getUsers();
+    List<User> returnedUsers = (List<User>)pacemaker.getUsers();
   }
   
   @Test
@@ -63,11 +64,19 @@ public class PacemakerExceptionTest
     when(pacemakerInterface.getUsers()).thenThrow(new RuntimeException("No users returned because of exception"));
     
     Collection<User> users = pacemaker.getUsers();
-    //System.out.println(user.toString());
-    
-    
+ 
     assertNull(users);
  }
+  
+  /*@Test
+  public void testDeleteUser(){
+   //User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
+   pacemaker.pacemakerInterface = pacemakerInterface;
+   when(pacemakerInterface.deleteUser(anyString())).thenThrow(new RuntimeException("No users deleted because of exception"));
+   List<User> returnedUsers = (List<User>)pacemaker.getUsers();
+   returnedUsers.forEach(user -> pacemaker.deleteUser(user.id));
+   assertNotEquals(realPacemaker.getUsers().size(), 0);
+ };*/
   
   
 }

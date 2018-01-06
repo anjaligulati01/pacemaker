@@ -75,7 +75,7 @@ class PacemakerAPI {
 	fun getActivityLocations(id: String): MutableList<Location>? {
 		require(activitiesIndex[id] != null)
 		var activity = activitiesIndex.get(id)
-		var locations:MutableList<Location>? = null
+		var locations:MutableList<Location>? = mutableListOf()
 		if(activity != null){
 			locations = activity.route
 		}
@@ -111,7 +111,7 @@ class PacemakerAPI {
 	
 	fun getActivityReport(id: String): List<Activity>? {
 		var user = userIndex.get(id)
-		var activities:List<Activity>? = null
+		var activities:List<Activity>? = listOf()
     if (user != null) {
         activities = user.activities.values.toList();
         activities = activities.sortedWith(compareBy(Activity::type))
@@ -121,7 +121,7 @@ class PacemakerAPI {
 	
 	fun getFriendActivityReport(id: String, email:String): List<Activity>? {
 		var user = userIndex.get(id)
-		var activities:List<Activity>? = null
+		var activities:List<Activity>? = listOf()
     if (user != null) {
       if(user.friends.contains(email)){
         var friendUser = getUserByEmail(email)

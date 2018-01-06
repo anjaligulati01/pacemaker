@@ -21,7 +21,7 @@ public class UserTest {
     pacemaker.deleteUsers();
     users.forEach(
         user -> pacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
-    Collection<User> returnedUsers = pacemaker.getUsers();
+    //Collection<User> returnedUsers = pacemaker.getUsers();
   }
 
   @After

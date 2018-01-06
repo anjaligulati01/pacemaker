@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -268,16 +269,16 @@ public class PacemakerAPI {
     
     public List<Activity> getDistanceLeaderBoardByType(String id, String type){
       List<Activity> activities = new ArrayList<Activity>();
-      //Stream<Activity> streamActivities = Stream.of();
+      System.out.println("Getting dlbbt");
       Optional<User> user = Optional.fromNullable(userIndex.get(id));
       if(user.isPresent()) {
         List<Activity> allActivities = new ArrayList<Activity>();
         user.get().friends.forEach(f -> {
-           //getUserByEmail(f).activities.values() call getActivities method
+           
           allActivities.addAll(getUserByEmail(f).activities.values());
-          //streamActivities = Stream.concat(streamActivities, getUserByEmail(f).activities.values().stream());
+          
         });
-        activities = allActivities.stream().filter(a -> a.type.equals(type)).collect(Collectors.toList());
+        activities = allActivities.stream().filter(a -> a.type.equals(type)).sorted(Comparator.comparing(Activity::getDistance)).collect(Collectors.toList());
       }
       return activities;
     }

@@ -12,8 +12,8 @@ import static models.Fixtures.users;
 
 public class UserTest {
 
-  //PacemakerAPI pacemaker = new PacemakerAPI("https://warm-island-21310.herokuapp.com");
-  PacemakerAPI pacemaker = new PacemakerAPI("http://localhost:7000");
+  PacemakerAPI pacemaker = new PacemakerAPI("https://warm-island-21310.herokuapp.com");
+  //PacemakerAPI pacemaker = new PacemakerAPI("http://localhost:7000");
   User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
 
   @Before

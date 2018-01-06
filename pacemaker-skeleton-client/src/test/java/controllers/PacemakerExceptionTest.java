@@ -27,9 +27,11 @@ import models.User;
 public class PacemakerExceptionTest
 {
     //@Mock
-  PacemakerAPI pacemaker = new PacemakerAPI("http://localhost:7000");
+  //PacemakerAPI pacemaker = new PacemakerAPI("http://localhost:7000");
+  PacemakerAPI pacemaker = new PacemakerAPI("https://warm-island-21310.herokuapp.com");
   
-  PacemakerAPI realPacemaker = new PacemakerAPI("http://localhost:7000");
+  
+  PacemakerAPI realPacemaker = new PacemakerAPI("https://warm-island-21310.herokuapp.com");
   
   PacemakerInterface pacemakerInterface = Mockito.mock(PacemakerInterface.class);
   
@@ -68,15 +70,15 @@ public class PacemakerExceptionTest
     assertNull(users);
  }
   
-  /*@Test
-  public void testDeleteUser(){
+  @Test
+  public void testDeleteUsers(){
    //User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
    pacemaker.pacemakerInterface = pacemakerInterface;
-   when(pacemakerInterface.deleteUser(anyString())).thenThrow(new RuntimeException("No users deleted because of exception"));
+   when(pacemakerInterface.deleteUsers()).thenThrow(new RuntimeException("No users deleted because of exception"));
    List<User> returnedUsers = (List<User>)pacemaker.getUsers();
-   returnedUsers.forEach(user -> pacemaker.deleteUser(user.id));
-   assertNotEquals(realPacemaker.getUsers().size(), 0);
- };*/
+   pacemaker.deleteUsers();
+   assertNotNull(users);
+ };
   
   
 }

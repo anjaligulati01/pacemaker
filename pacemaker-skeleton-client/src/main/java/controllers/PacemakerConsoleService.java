@@ -19,8 +19,9 @@ import parsers.Parser;
 
 public class PacemakerConsoleService {
 
-  //private PacemakerAPI paceApi = new PacemakerAPI("https://warm-island-21310.herokuapp.com/");
-  private PacemakerAPI paceApi = new PacemakerAPI("http://localhost:7000/");
+  private PacemakerAPI paceApi = new PacemakerAPI("https://warm-island-21310.herokuapp.com/"); //fully implemented, all commands
+  //private PacemakerAPI paceApi = new PacemakerAPI("https://immense-headland-47143.herokuapp.com/"); //Kotlin version, partially implemented
+  //private PacemakerAPI paceApi = new PacemakerAPI("http://localhost:7000/"); //all commands implemented
   private Parser console = new AsciiTableParser();
   private User loggedInUser = null;
   private User adminUser = null;

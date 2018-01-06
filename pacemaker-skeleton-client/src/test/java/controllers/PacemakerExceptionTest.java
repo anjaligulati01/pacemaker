@@ -1,5 +1,6 @@
 package controllers;
 
+import static models.Fixtures.users;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -27,27 +28,46 @@ public class PacemakerExceptionTest
     //@Mock
   PacemakerAPI pacemaker = new PacemakerAPI("http://localhost:7000");
   
+  PacemakerAPI realPacemaker = new PacemakerAPI("http://localhost:7000");
+  
   PacemakerInterface pacemakerInterface = Mockito.mock(PacemakerInterface.class);
   
   boolean thrown = false;
   
+  @Before
+  public void setup() {
+    pacemaker.deleteUsers();
+    users.forEach(
+        user -> realPacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
+    Collection<User> returnedUsers = pacemaker.getUsers();
+  }
+  
   @Test
   public void testCreateUser(){
-     //add the behavior to throw exception
-//     Mockito.doThrow(new RuntimeException("User not created"))
-//        .when(pacemakerInterface).registerUser(new User(org.mockito.Matchers.anyString(),org.mockito.Matchers.anyString()
-//            ,org.mockito.Matchers.anyString(),org.mockito.Matchers.anyString()));
+   
     User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
     pacemaker.pacemakerInterface = pacemakerInterface;
      when(pacemakerInterface.registerUser(homer)).thenThrow(new RuntimeException("User not created because of exception"));
-     //org.mockito.Matchers.anyString(),org.mockito.Matchers.anyString()
-     //,org.mockito.Matchers.anyString(),org.mockito.Matchers.anyString()
-     //test the add functionality
-     //User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
+    
      User user = pacemaker.createUser(homer.firstname, homer.lastname, homer.email, homer.password);
-     //System.out.println(user.toString());
-     
-     
+       
      assertNull(user);
   }
+  
+  @Test
+  public void testGetUsers(){
+   
+   //User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
+   pacemaker.pacemakerInterface = pacemakerInterface;
+   
+    when(pacemakerInterface.getUsers()).thenThrow(new RuntimeException("No users returned because of exception"));
+    
+    Collection<User> users = pacemaker.getUsers();
+    //System.out.println(user.toString());
+    
+    
+    assertNull(users);
+ }
+  
+  
 }

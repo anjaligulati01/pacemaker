@@ -41,6 +41,16 @@ class PacemakerAPI {
   fun getActivity(id: String): Activity? {
     return activitiesIndex[id]
   }
+	
+	fun getActivities(id: String): List<Activity>? {
+    var user = userIndex.get(id)
+		var activities:List<Activity>? = null
+    if (user != null) {
+        activities = user.activities.values.toList();
+        //activities = activities.sortedWith(compareBy(Activity::type))
+    }
+    return activities;
+  }
 
   fun deleteActivities(id: String) {
     require(userIndex[id] != null)
@@ -52,4 +62,76 @@ class PacemakerAPI {
       user.activities.clear();
     }
   }
+	
+	fun addLocation(id: String, latitude: Double, longitude: Double){
+		require(activitiesIndex[id] != null)
+		var activity = activitiesIndex.get(id)
+		if(activity != null){
+			val location = Location(latitude, longitude)
+			activity.route.add(location);
+		}
+	}
+	
+	fun getActivityLocations(id: String): MutableList<Location>? {
+		require(activitiesIndex[id] != null)
+		var activity = activitiesIndex.get(id)
+		var locations:MutableList<Location>? = null
+		if(activity != null){
+			locations = activity.route
+		}
+		return locations;
+	}
+	
+	fun followFriend(id: String, email: String) {
+    require(userIndex[id] != null)
+    var user = userIndex.get(id)
+    if (user != null) {
+      user.friends.add(email)
+    }
+  }
+	
+	fun unfollowFriend(id: String, email: String) {
+    require(userIndex[id] != null)
+    var user = userIndex.get(id)
+    if (user != null) {
+      user.friends.remove(email)
+    }
+  }
+	
+	fun listFriends(id: String): MutableList<User>? {
+		println("ENTER listFriends: " + id);
+    var friendsList:MutableList<User>? = mutableListOf()
+		require(userIndex[id] != null)
+    var user = userIndex[id]
+		if (user != null) {
+      user.friends.forEach{friendsList?.add(getUserByEmail(it)!!)}
+    }
+		return friendsList;
+  }
+	
+	fun getActivityReport(id: String): List<Activity>? {
+		var user = userIndex.get(id)
+		var activities:List<Activity>? = null
+    if (user != null) {
+        activities = user.activities.values.toList();
+        activities = activities.sortedWith(compareBy(Activity::type))
+    }
+    return activities;
+	}
+	
+	fun getFriendActivityReport(id: String, email:String): List<Activity>? {
+		var user = userIndex.get(id)
+		var activities:List<Activity>? = null
+    if (user != null) {
+      if(user.friends.contains(email)){
+        var friendUser = getUserByEmail(email)
+        if(friendUser != null){
+          activities = friendUser.activities.values.toList();
+          activities = activities.sortedWith(compareBy(Activity::type))
+        }
+      } 
+    }
+    return activities;
+	}
+	
 }

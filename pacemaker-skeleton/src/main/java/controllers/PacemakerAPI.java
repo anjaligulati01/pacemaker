@@ -139,7 +139,10 @@ public class PacemakerAPI {
   public void follow(String id, String email) {
     Optional<User> user = Optional.fromNullable(userIndex.get(id));
     if(user.isPresent()) {
-      user.get().friends.add(email);
+      if(!user.get().friends.contains(email)) {
+        user.get().friends.add(email);
+      }
+      //user.get().friends.add(email);
     }
   }
   

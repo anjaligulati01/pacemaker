@@ -75,10 +75,12 @@ public class PacemakerExceptionTest
    //User homer = new User("homer", "simpson", "homer@simpson.com", "secret");
    pacemaker.pacemakerInterface = pacemakerInterface;
    when(pacemakerInterface.deleteUsers()).thenThrow(new RuntimeException("No users deleted because of exception"));
-   List<User> returnedUsers = (List<User>)pacemaker.getUsers();
+  // List<User> returnedUsers = (List<User>)pacemaker.getUsers();
    pacemaker.deleteUsers();
    assertNotNull(users);
  };
+ 
+ 
   
   
 }
